@@ -15,18 +15,22 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // allow non-browser requests (Postman, curl)
+    origin: (origin, callback) => {
+      console.log("CORS origin:", origin);
+
+      // Allow server-to-server, curl, postman
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
 
-      return callback(new Error("Not allowed by CORS"));
+      // ❌ DO NOT throw error
+      // ✅ Just deny
+      return callback(null, false);
     },
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
